@@ -12,8 +12,154 @@ datasource db {
   provider = "postgresql"
 }
 
-model User { 
-  id    Int     @id @default(autoincrement()) 
-  email String  @unique
-  name  String?
-} 
+enum UserRole {
+  member
+  reviewer
+  admin
+
+  @@map("user_role")
+}
+
+enum UserStatus {
+  active
+  suspended
+  deleted
+
+  @@map("user_status")
+}
+
+enum AuthProvider {
+  email
+  google
+
+  @@map("auth_provider")
+}
+
+enum TokenPurpose {
+  verify_email
+  reset_password
+
+  @@map("token_purpose")
+}
+
+enum StaffActions {
+  suspend_user
+  unsuspend_user
+  change_role
+  approve_product
+  reject_product
+  request_product_changes
+  takedown_product
+  feature_product
+  resolve_report
+
+  @@map("staff_action")
+}
+
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  email           String    @unique @db.Citext
+  emailVerifiedAt DateTime? @map("email_verified_at") @db.Timestamptz(6)
+
+  passwordHash      String?   @map("password_hash")
+  passwordChangedAt DateTime? @map("password_changed_at") @db.Timestamptz()
+  failedAttempts    Int       @default(0) @map("failed_attempts")
+  lockedUntil       DateTime? @map("locked_until") @db.Timestamptz()
+
+  headline    String?
+  username    String? @db.VarChar(50)
+  displayName String? @map("display_name")
+  avatarURL   String? @map("avatar_url")
+
+  role   UserRole   @default(member)
+  status UserStatus @default(active)
+
+  suspendedAt     DateTime? @map("suspended_at") @db.Timestamptz(6)
+  suspendedReason String?   @map("suspended_reason")
+
+  // anti-cheat signals
+  signupIp    String?   @map("signup_ip") @db.Inet
+  lastLoginIp String?   @map("last_login_ip") @db.Inet
+  lastLoginAt DateTime? @map("last_login_at") @db.Timestamptz
+
+  // 
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  sessions       Session[]
+  authTokens     AuthToken[]
+  oauthAccounts  OAuthAccount[]
+  staffAuditLogs StaffAuditLog[]
+
+  @@index([status])
+  @@index([role])
+  @@index([signupIp, createdAt(sort: Desc)])
+  @@map("users")
+}
+
+model OAuthAccount {
+  id             String       @id @default(uuid()) @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  provider       AuthProvider
+  providerUserId String       @map("provider_user_id")
+  email          String       @db.Citext
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([provider, providerUserId])
+  @@index([userId])
+  @@map("oauth_account")
+}
+
+model Session {
+  id               String   @id @default(uuid()) @db.Uuid
+  userId           String   @map("user_id") @db.Uuid
+  refreshTokenHash String   @unique @map("refresh_token_hash")
+  userAgent        String   @unique @map("user_agent")
+  ip               String?  @map("signup_ip") @db.Inet
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  lastUsedAt       DateTime @default(now()) @map("last_used_at") @db.Timestamptz(6)
+  expiresAt        DateTime @default(now()) @map("expires_at") @db.Timestamptz(6)
+  revokedAt        DateTime @default(now()) @map("revoked_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model AuthToken {
+  id        String       @id @default(uuid()) @db.Uuid
+  userId    String       @map("user_id") @db.Uuid
+  purpose   TokenPurpose
+  tokenHash String       @unique @map("token_hash")
+  expiresAt DateTime     @map("expires_at") @db.Timestamptz(6)
+  usedAt    DateTime?    @map("used_at") @db.Timestamptz(6)
+  createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User?        @relation(fields: [userId], references: [id])
+
+  @@index([userId, purpose])
+  @@index([expiresAt])
+  @@map("auth_tokens")
+}
+
+model StaffAuditLog {
+  id         String       @id @default(uuid()) @db.Uuid
+  actorId    String       @map("actor_id") @db.Uuid
+  action     StaffActions
+  targetType String       @map("target_type") // 'user' | 'product' | 'comment' | 'report'
+  targetId   String       @map("target_id") @db.Uuid
+  reason     String?
+  metadata   Json?        @db.JsonB
+  ipAddress  String?      @map("ip_address") @db.Inet
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamptz
+
+  actor User @relation(fields: [actorId], references: [id], onDelete: Cascade)
+
+  @@index([actorId, createdAt(sort: Desc)])
+  @@index([targetType, targetId, createdAt(sort: Desc)])
+  @@map("staff_audit_log")
+}
