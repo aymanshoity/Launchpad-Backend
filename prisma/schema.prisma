@@ -122,7 +122,7 @@ model Session {
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   lastUsedAt       DateTime @default(now()) @map("last_used_at") @db.Timestamptz(6)
   expiresAt        DateTime @default(now()) @map("expires_at") @db.Timestamptz(6)
-  revokedAt        DateTime @default(now()) @map("revoked_at") @db.Timestamptz(6)
+  revokedAt        DateTime? @map("revoked_at") @db.Timestamptz(6)
 
   user User @relation(fields: [userId], references: [id])
 

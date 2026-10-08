@@ -17,9 +17,6 @@ export const setRefreshCookie=(res:Response,token:string)=>{
    maxAge:REFRESH_TTL_SECONDS*1000
  })
 }
-export const clearRefreshCookie=(res:Response,token:string)=>{
- res.cookie(REFRESH_COOKIE,token,{
-   ...baseOptions,
-   maxAge:REFRESH_TTL_SECONDS*1000
- })
+export const clearRefreshCookie=(res:Response)=>{
+ res.clearCookie(REFRESH_COOKIE,baseOptions)
 }
