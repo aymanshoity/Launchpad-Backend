@@ -1,7 +1,7 @@
 
 import { Request, RequestHandler } from "express"
 import { z } from "zod"
-import { signup, toPublicUser, verifySignupEmail, resendVerificationEmail, loginUser, refreshSession, logoutUser,forgotPasswordService,resetPasswordService, getUser  } from "../services/auth.service"
+import { signup, toPublicUser, verifySignupEmail, resendVerificationEmail, loginUser, refreshSession, logoutUser,forgotPasswordService,resetPasswordService, getUser, changeUserPassword, loginWithGoogle  } from "../services/auth.service"
 import { clearRefreshCookie, REFRESH_COOKIE, setRefreshCookie,} from "../utils/cookies"
 import { AppError } from "../utils/AppError"
 
@@ -19,6 +19,9 @@ const resendSchema = z.object({ email })
 const loginSchema = z.object({ email, password: z.string().min(8).max(80) })
 const forgetSchema = z.object({ email })
 const resetSchema = z.object({ token: z.string().min(1), password })
+const changePasswordSchema = z.object({ currentPassword: z.string().min(1),newPassword:password })
+const googleLoginSchema = z.object({ idToken:z.string().min(1)})
+
 const clientInfo = (req: Request) => ({
    ip: req.ip, userAgent: req.get("user-agent")
 })
@@ -79,5 +82,21 @@ export const resetPassword:RequestHandler=async(req,res)=>{
 
 export const me:RequestHandler=async(req,res)=>{
    const user =await getUser(res.locals.userId)
-    res.status(200).json({user:toPublicUser(user),message:"Password Updated,Please login Again",status:200})
+    res.status(200).json({user:toPublicUser(user),message:"I found myself ",status:200})
+}
+
+export const changePassword:RequestHandler=async(req,res)=>{
+
+   const {currentPassword,newPassword}=changePasswordSchema.parse(req.body)
+   await changeUserPassword(res.locals.userId,currentPassword,newPassword);
+   res.json({message:"Password changed successfully",status:200})
+}
+export const googleLogin:RequestHandler=async(req,res)=>{
+
+   const {idToken}=googleLoginSchema.parse(req.body)
+   const result=await loginWithGoogle(idToken,clientInfo(req))
+   if (!result) throw new AppError(401, "Google login failed")
+   const {accessToken,refreshToken}=result
+   setRefreshCookie(res,refreshToken)
+    res.status(200).json({ accessToken, refreshToken, message: "Logged in successfully", status: 200 })
 }

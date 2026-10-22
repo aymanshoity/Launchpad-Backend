@@ -6,10 +6,12 @@ const router = Router();
 
 router.post("/signup", auth.signUp);
 router.post("/login", auth.login);
+router.post("/google-login", auth.googleLogin);
 router.post("/logout", auth.logout);
 router.post("/refresh-token", auth.refresh);
 router.post("/forgot-password", auth.forgotPassword);
 router.post("/reset-password", auth.resetPassword);
+router.post("/change-password",requiredAuth, auth.changePassword);
 
  router.get("/verify-email", auth.verifyEmail);
  router.post("/resend-verification", auth.resendVerification);

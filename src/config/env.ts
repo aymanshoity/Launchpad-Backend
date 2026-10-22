@@ -9,8 +9,10 @@ const schema = z.object({
    JWT_ACCESS_SECRET: z.string().min(32),
    JWT_REFRESH_SECRET: z.string().min(32),
    APP_URL: z.string().default("http://localhost:3001"),
-   RESEND_API_KEY: z.string().min(1),
-   EMAIL_FROM: z.string().min(1),
+   FRONTEND_URL: z.string().min(1),
+   GOOGLE_CLIENT_ID: z.string().optional(),
+   GMAIL_USER: z.string().email(),
+   GMAIL_APP_PASSWORD: z.string().min(1),
 })
 
 export const env = schema.parse(process.env)

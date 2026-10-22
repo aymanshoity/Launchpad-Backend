@@ -1,3 +1,6 @@
+
+CREATE EXTENSION IF NOT EXISTS citext;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 -- CreateEnum
 CREATE TYPE "user_role" AS ENUM ('member', 'reviewer', 'admin');
 

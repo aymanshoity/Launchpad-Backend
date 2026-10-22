@@ -4,12 +4,14 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
   provider = "postgresql"
+   extensions = [citext, pg_trgm]
 }
 
 enum UserRole {
@@ -67,8 +69,8 @@ model User {
   failedAttempts    Int       @default(0) @map("failed_attempts")
   lockedUntil       DateTime? @map("locked_until") @db.Timestamptz()
 
-  headline    String?
-  username    String? @db.VarChar(50)
+  headline    String @unique @db.Citext
+  username    String? @db.VarChar(50) 
   displayName String? @map("display_name")
   avatarURL   String? @map("avatar_url")
 
@@ -117,14 +119,14 @@ model Session {
   id               String   @id @default(uuid()) @db.Uuid
   userId           String   @map("user_id") @db.Uuid
   refreshTokenHash String   @unique @map("refresh_token_hash")
-  userAgent        String   @unique @map("user_agent")
+  userAgent        String   @map("user_agent")
   ip               String?  @map("signup_ip") @db.Inet
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   lastUsedAt       DateTime @default(now()) @map("last_used_at") @db.Timestamptz(6)
   expiresAt        DateTime @default(now()) @map("expires_at") @db.Timestamptz(6)
   revokedAt        DateTime? @map("revoked_at") @db.Timestamptz(6)
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])

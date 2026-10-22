@@ -6,6 +6,7 @@ import { signRefreshToken, hashToken, REFRESH_TTL_SECONDS, signAccessToken, gene
 import { env } from "../config/env";
 import { sendSignupVerificationEmail, sendPasswordResetEmail } from "../utils/mailer";
 import { AppError } from "../utils/AppError";
+import { OAuth2Client } from "google-auth-library";
 const BCRYPT_ROUNDS = 12
 
 const DUMMY_HASH = bcrypt.hashSync('dummy', BCRYPT_ROUNDS)
@@ -13,6 +14,8 @@ type ClientInfo = {
    ip?: string
    userAgent?: string
 }
+
+const googleClient = new OAuth2Client(env.GOOGLE_CLIENT_ID)
 
 export const toPublicUser = (user: User) => {
    return {
@@ -47,6 +50,7 @@ export const signup = async (input: { username: string, email: string, password:
          passwordHash: passwordHash,
          displayName: input.username,
          username: input.username,
+         headline: "",
          signupIp: client.ip
       }
    })
@@ -59,7 +63,7 @@ export const signup = async (input: { username: string, email: string, password:
          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
       }
    })
-   await sendSignupVerificationEmail(user.email, `${env.APP_URL}/verify-email?token=${token}`)
+   await sendSignupVerificationEmail(user.email, `${env.FRONTEND_URL}/verify-email?token=${token}`)
    return { user };
 }
 
@@ -103,14 +107,14 @@ export const resendVerificationEmail = async (email: string) => {
       })
    ])
 
-   await sendSignupVerificationEmail(user.email, `${env.APP_URL}/verify-email?token=${token}`)
+   await sendSignupVerificationEmail(user.email, `${env.FRONTEND_URL}/verify-email?token=${token}`)
 }
 
 export const loginUser = async (email: string, password: string, client: ClientInfo) => {
 
    const user = await prisma.user.findUnique({ where: { email } })
 
-   const passwordOk = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH) ? user?.passwordHash : DUMMY_HASH
+   const passwordOk = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH)
 
    if (!user || user.deletedAt || !passwordOk || !user.passwordHash) {
       throw new AppError(401, "Invalid email or password")
@@ -124,6 +128,72 @@ export const loginUser = async (email: string, password: string, client: ClientI
 
    return { user, ...(await startSession(user, client)) }
 }
+
+export const loginWithGoogle = async (idToken: string, client: ClientInfo) => {
+
+   const ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: env.GOOGLE_CLIENT_ID
+   })
+
+   const payload = ticket.getPayload()
+
+   if (!payload?.sub || !payload.email) {
+      throw new AppError(401, "Invalid Google Token")
+   }
+
+   const existingIdentity = await prisma.oAuthAccount.findFirst({
+      where: {
+         provider: "google",
+         providerUserId: payload.sub
+      },
+      include: { user: true }
+   })
+
+   let user = existingIdentity?.user
+
+   if (user) {
+      await prisma.oAuthAccount.create({
+         data: { userId: user.id, provider: "google", email: payload.email, providerUserId: payload.sub },
+      })
+   } else {
+      const baseUsername = payload.email.split("@")[0].toLowerCase().replace(/[^a-z0-9_]/g, "_")
+      let username = baseUsername;
+      let suffix = 0;
+      while (await prisma.user.findFirst({ where: { username } })) {
+         suffix += 1;
+         username = `${baseUsername}_${suffix}`;
+      }
+      user = await prisma.user.create({
+         data: {
+            email: payload.email,
+            username,
+            headline: "",
+            displayName: payload.name ?? payload.email.split("@")[0],
+            avatarURL: payload?.picture,
+            emailVerifiedAt: new Date(),
+            passwordHash: null,
+            oauthAccounts: {
+               create: { provider: "google", email: payload.email, providerUserId: payload.sub }
+            }
+
+         }
+      })
+
+      if (user.deletedAt) {
+         throw new AppError(403, "This account is no longer available");
+      }
+      if (user.status === "suspended") {
+         throw new AppError(403, "This account is suspended");
+      }
+
+      return {user,...await(startSession(user,client))}
+
+   }
+}
+
+
+
 
 export const refreshSession = async (refreshToken: string) => {
    const { userId } = verifyRefreshToken(refreshToken)
@@ -188,7 +258,7 @@ export const forgotPasswordService = async (email: string) => {
          }
       })
    ])
-   await sendPasswordResetEmail(user.email, `${env.APP_URL}/reset-password?token=${token}`)
+   await sendPasswordResetEmail(user.email, `${env.FRONTEND_URL}/reset-password?token=${token}`)
 }
 
 export const resetPasswordService = async (token: string, newPassword: string) => {
@@ -200,7 +270,7 @@ export const resetPasswordService = async (token: string, newPassword: string) =
    const passwordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS)
    const now = new Date();
    await prisma.$transaction([
-      prisma.user.update({ where: { id: record.id }, data: { passwordHash } }),
+      prisma.user.update({ where: { id: record.userId }, data: { passwordHash, passwordChangedAt: now, failedAttempts: 0, lockedUntil: null } }),
       prisma.authToken.update({ where: { id: record.id }, data: { usedAt: now } }),
       prisma.session.updateMany({
          where: { userId: record.userId },
@@ -214,4 +284,25 @@ export const getUser = async (id: string) => {
    const user = await prisma.user.findUnique({ where: { id } })
    if (!user || user.deletedAt) throw new AppError(404, "User not Found")
    return user
+}
+
+export const changeUserPassword = async (userId: string, currentPassword: string, newPassword: string) => {
+
+   const user = await prisma.user.findUnique({ where: { id: userId } })
+
+   if (!user || user.deletedAt || !user.passwordHash) {
+      throw new AppError(400, "Password change is not available for this account");
+   }
+
+   const currentOk = await bcrypt.compare(currentPassword, user.passwordHash)
+   if (!currentOk) {
+      throw new AppError(401, "Current password is incorrect")
+   }
+
+   const newPasswordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+
+   await prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash: newPasswordHash }
+   })
 }

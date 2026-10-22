@@ -283,7 +283,7 @@ export type UserGroupByOutputType = {
   passwordChangedAt: Date | null
   failedAttempts: number
   lockedUntil: Date | null
-  headline: string | null
+  headline: string
   username: string | null
   displayName: string | null
   avatarURL: string | null
@@ -330,7 +330,7 @@ export type UserWhereInput = {
   passwordChangedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   failedAttempts?: Prisma.IntFilter<"User"> | number
   lockedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  headline?: Prisma.StringNullableFilter<"User"> | string | null
+  headline?: Prisma.StringFilter<"User"> | string
   username?: Prisma.StringNullableFilter<"User"> | string | null
   displayName?: Prisma.StringNullableFilter<"User"> | string | null
   avatarURL?: Prisma.StringNullableFilter<"User"> | string | null
@@ -358,7 +358,7 @@ export type UserOrderByWithRelationInput = {
   passwordChangedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   failedAttempts?: Prisma.SortOrder
   lockedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
-  headline?: Prisma.SortOrderInput | Prisma.SortOrder
+  headline?: Prisma.SortOrder
   username?: Prisma.SortOrderInput | Prisma.SortOrder
   displayName?: Prisma.SortOrderInput | Prisma.SortOrder
   avatarURL?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -381,6 +381,7 @@ export type UserOrderByWithRelationInput = {
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  headline?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -389,7 +390,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   passwordChangedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   failedAttempts?: Prisma.IntFilter<"User"> | number
   lockedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  headline?: Prisma.StringNullableFilter<"User"> | string | null
   username?: Prisma.StringNullableFilter<"User"> | string | null
   displayName?: Prisma.StringNullableFilter<"User"> | string | null
   avatarURL?: Prisma.StringNullableFilter<"User"> | string | null
@@ -407,7 +407,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   authTokens?: Prisma.AuthTokenListRelationFilter
   oauthAccounts?: Prisma.OAuthAccountListRelationFilter
   staffAuditLogs?: Prisma.StaffAuditLogListRelationFilter
-}, "id" | "email">
+}, "id" | "email" | "headline">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -417,7 +417,7 @@ export type UserOrderByWithAggregationInput = {
   passwordChangedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   failedAttempts?: Prisma.SortOrder
   lockedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
-  headline?: Prisma.SortOrderInput | Prisma.SortOrder
+  headline?: Prisma.SortOrder
   username?: Prisma.SortOrderInput | Prisma.SortOrder
   displayName?: Prisma.SortOrderInput | Prisma.SortOrder
   avatarURL?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -449,7 +449,7 @@ export type UserScalarWhereWithAggregatesInput = {
   passwordChangedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   failedAttempts?: Prisma.IntWithAggregatesFilter<"User"> | number
   lockedUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-  headline?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  headline?: Prisma.StringWithAggregatesFilter<"User"> | string
   username?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   displayName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   avatarURL?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -473,7 +473,7 @@ export type UserCreateInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -501,7 +501,7 @@ export type UserUncheckedCreateInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -529,7 +529,7 @@ export type UserUpdateInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -557,7 +557,7 @@ export type UserUncheckedUpdateInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -585,7 +585,7 @@ export type UserCreateManyInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -609,7 +609,7 @@ export type UserUpdateManyMutationInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -633,7 +633,7 @@ export type UserUncheckedUpdateManyInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -837,7 +837,7 @@ export type UserCreateWithoutOauthAccountsInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -864,7 +864,7 @@ export type UserUncheckedCreateWithoutOauthAccountsInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -907,7 +907,7 @@ export type UserUpdateWithoutOauthAccountsInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -934,7 +934,7 @@ export type UserUncheckedUpdateWithoutOauthAccountsInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -961,7 +961,7 @@ export type UserCreateWithoutSessionsInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -988,7 +988,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -1031,7 +1031,7 @@ export type UserUpdateWithoutSessionsInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1058,7 +1058,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1085,7 +1085,7 @@ export type UserCreateWithoutAuthTokensInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -1112,7 +1112,7 @@ export type UserUncheckedCreateWithoutAuthTokensInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -1155,7 +1155,7 @@ export type UserUpdateWithoutAuthTokensInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1182,7 +1182,7 @@ export type UserUncheckedUpdateWithoutAuthTokensInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1209,7 +1209,7 @@ export type UserCreateWithoutStaffAuditLogsInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -1236,7 +1236,7 @@ export type UserUncheckedCreateWithoutStaffAuditLogsInput = {
   passwordChangedAt?: Date | string | null
   failedAttempts?: number
   lockedUntil?: Date | string | null
-  headline?: string | null
+  headline: string
   username?: string | null
   displayName?: string | null
   avatarURL?: string | null
@@ -1279,7 +1279,7 @@ export type UserUpdateWithoutStaffAuditLogsInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1306,7 +1306,7 @@ export type UserUncheckedUpdateWithoutStaffAuditLogsInput = {
   passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headline?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1511,7 +1511,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     passwordChangedAt: Date | null
     failedAttempts: number
     lockedUntil: Date | null
-    headline: string | null
+    headline: string
     username: string | null
     displayName: string | null
     avatarURL: string | null
