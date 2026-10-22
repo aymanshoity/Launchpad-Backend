@@ -1,7 +1,7 @@
 
 import { Request, RequestHandler } from "express"
 import { z } from "zod"
-import { signup, toPublicUser, verifySignupEmail, resendVerificationEmail, loginUser, refreshSession, logoutUser,forgotPasswordService,resetPasswordService, getUser, changeUserPassword, loginWithGoogle  } from "../services/auth.service"
+import { signup, toPublicUser, verifySignupEmail, resendVerificationEmail, loginUser, refreshSession, logoutUser,forgotPasswordService,resetPasswordService, getUser, changeUserPassword, loginWithGoogle, updateUserProfile  } from "../services/auth.service"
 import { clearRefreshCookie, REFRESH_COOKIE, setRefreshCookie,} from "../utils/cookies"
 import { AppError } from "../utils/AppError"
 
@@ -21,6 +21,12 @@ const forgetSchema = z.object({ email })
 const resetSchema = z.object({ token: z.string().min(1), password })
 const changePasswordSchema = z.object({ currentPassword: z.string().min(1),newPassword:password })
 const googleLoginSchema = z.object({ idToken:z.string().min(1)})
+const updateProfileSchema=z.object({
+   displayName: z.string().trim().min(1).max(80).optional(),
+   headline: z.string().trim().max(160).optional(),
+   username: z.string().toLowerCase().regex(/^[a-z0-9_]{3,30}$/, "3-30 characters: a-z, 0-9, _").optional(),
+})
+
 
 const clientInfo = (req: Request) => ({
    ip: req.ip, userAgent: req.get("user-agent")
@@ -100,3 +106,10 @@ export const googleLogin:RequestHandler=async(req,res)=>{
    setRefreshCookie(res,refreshToken)
     res.status(200).json({ accessToken, refreshToken, message: "Logged in successfully", status: 200 })
 }
+export const updateProfile:RequestHandler=async(req,res)=>{
+
+   const updates=updateProfileSchema.parse(req.body)
+   const user=await updateUserProfile(res.locals.userId, updates,req.file?.buffer)
+    res.status(200).json({ user: toPublicUser(user), message: "Profile updated successfully", status: 200 })
+}
+

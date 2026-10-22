@@ -7,6 +7,7 @@ import { env } from "../config/env";
 import { sendSignupVerificationEmail, sendPasswordResetEmail } from "../utils/mailer";
 import { AppError } from "../utils/AppError";
 import { OAuth2Client } from "google-auth-library";
+import { cloudinary } from "../lib/cloudinary";
 const BCRYPT_ROUNDS = 12
 
 const DUMMY_HASH = bcrypt.hashSync('dummy', BCRYPT_ROUNDS)
@@ -24,6 +25,7 @@ export const toPublicUser = (user: User) => {
       username: user?.username,
       displayName: user?.displayName,
       role: user?.role,
+      avatarURL:user?.avatarURL,
       emailVerified: user?.emailVerifiedAt
    }
 
@@ -187,13 +189,10 @@ export const loginWithGoogle = async (idToken: string, client: ClientInfo) => {
          throw new AppError(403, "This account is suspended");
       }
 
-      return {user,...await(startSession(user,client))}
+      return { user, ...await (startSession(user, client)) }
 
    }
 }
-
-
-
 
 export const refreshSession = async (refreshToken: string) => {
    const { userId } = verifyRefreshToken(refreshToken)
@@ -305,4 +304,40 @@ export const changeUserPassword = async (userId: string, currentPassword: string
       where: { id: userId },
       data: { passwordHash: newPasswordHash }
    })
+}
+
+export const updateUserProfile = async(
+   userId: string,
+   updates: { displayName?: string, headline?: string, username?: string },
+   avatarBuffer?: Buffer
+)=>{
+   const data:Record<string,unknown>={...updates};
+
+   if(avatarBuffer){
+      const result=await new Promise<{secure_url:string}>((resolve,reject)=>{
+         const stream=cloudinary.uploader.upload_stream(
+            {
+               folder:"launchpad/avatars",
+               public_id:userId,
+               overwrite:true,
+               transformation:[{width:256,height:256,crop:"fill",gravity:"face"}]
+            },
+            (error,result)=>{
+               if(error|| !result) return reject(error)
+                  resolve(result as {secure_url:string})
+            }
+         );
+         stream.end(avatarBuffer)
+
+      })
+      data.avatarURL=result.secure_url;
+   }
+
+   if(Object.keys(data).length===0){
+      throw new AppError(400,"No changes provided")
+   }
+
+   const user=await prisma.user.update({where:{id:userId},data})
+   return user;
+
 }
