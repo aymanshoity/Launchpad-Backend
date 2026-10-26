@@ -55,7 +55,28 @@ export const ModelName = {
   OAuthAccount: 'OAuthAccount',
   Session: 'Session',
   AuthToken: 'AuthToken',
-  StaffAuditLog: 'StaffAuditLog'
+  Topic: 'Topic',
+  Product: 'Product',
+  ProductMedia: 'ProductMedia',
+  ProductTopic: 'ProductTopic',
+  ProductReview: 'ProductReview',
+  AppSetting: 'AppSetting',
+  Vote: 'Vote',
+  Comment: 'Comment',
+  Report: 'Report',
+  UserFollow: 'UserFollow',
+  TopicFollow: 'TopicFollow',
+  DailyRanking: 'DailyRanking',
+  RankSnapshot: 'RankSnapshot',
+  FeaturedSlot: 'FeaturedSlot',
+  Notification: 'Notification',
+  NotificationPreference: 'NotificationPreference',
+  EmailOutbox: 'EmailOutbox',
+  ProductViewEvent: 'ProductViewEvent',
+  ProductDailyStat: 'ProductDailyStat',
+  ExportJob: 'ExportJob',
+  StaffAuditLog: 'StaffAuditLog',
+  VoteFlag: 'VoteFlag'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -141,6 +162,254 @@ export const AuthTokenScalarFieldEnum = {
 export type AuthTokenScalarFieldEnum = (typeof AuthTokenScalarFieldEnum)[keyof typeof AuthTokenScalarFieldEnum]
 
 
+export const TopicScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name'
+} as const
+
+export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof TopicScalarFieldEnum]
+
+
+export const ProductScalarFieldEnum = {
+  id: 'id',
+  founderId: 'founderId',
+  name: 'name',
+  slug: 'slug',
+  pitch: 'pitch',
+  description: 'description',
+  websiteUrl: 'websiteUrl',
+  status: 'status',
+  launchDate: 'launchDate',
+  launchedAt: 'launchedAt',
+  submittedAt: 'submittedAt',
+  isFeatured: 'isFeatured',
+  voteCount: 'voteCount',
+  score: 'score',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const ProductMediaScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  kind: 'kind',
+  fileUrl: 'fileUrl',
+  position: 'position',
+  createdAt: 'createdAt'
+} as const
+
+export type ProductMediaScalarFieldEnum = (typeof ProductMediaScalarFieldEnum)[keyof typeof ProductMediaScalarFieldEnum]
+
+
+export const ProductTopicScalarFieldEnum = {
+  productId: 'productId',
+  topicId: 'topicId'
+} as const
+
+export type ProductTopicScalarFieldEnum = (typeof ProductTopicScalarFieldEnum)[keyof typeof ProductTopicScalarFieldEnum]
+
+
+export const ProductReviewScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  reviewerId: 'reviewerId',
+  decision: 'decision',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type ProductReviewScalarFieldEnum = (typeof ProductReviewScalarFieldEnum)[keyof typeof ProductReviewScalarFieldEnum]
+
+
+export const AppSettingScalarFieldEnum = {
+  key: 'key',
+  value: 'value',
+  updateAt: 'updateAt'
+} as const
+
+export type AppSettingScalarFieldEnum = (typeof AppSettingScalarFieldEnum)[keyof typeof AppSettingScalarFieldEnum]
+
+
+export const VoteScalarFieldEnum = {
+  userId: 'userId',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  ip: 'ip',
+  deviceHash: 'deviceHash'
+} as const
+
+export type VoteScalarFieldEnum = (typeof VoteScalarFieldEnum)[keyof typeof VoteScalarFieldEnum]
+
+
+export const CommentScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  userId: 'userId',
+  parentCommentId: 'parentCommentId',
+  body: 'body',
+  status: 'status',
+  createdAt: 'createdAt',
+  editedAt: 'editedAt'
+} as const
+
+export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
+
+
+export const ReportScalarFieldEnum = {
+  id: 'id',
+  reporterId: 'reporterId',
+  targetProductId: 'targetProductId',
+  targetCommentId: 'targetCommentId',
+  reason: 'reason',
+  status: 'status',
+  handledById: 'handledById',
+  handledAt: 'handledAt',
+  resolutionNote: 'resolutionNote',
+  createdAt: 'createdAt'
+} as const
+
+export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
+
+
+export const UserFollowScalarFieldEnum = {
+  followerId: 'followerId',
+  followedId: 'followedId',
+  createdAt: 'createdAt'
+} as const
+
+export type UserFollowScalarFieldEnum = (typeof UserFollowScalarFieldEnum)[keyof typeof UserFollowScalarFieldEnum]
+
+
+export const TopicFollowScalarFieldEnum = {
+  userId: 'userId',
+  topicId: 'topicId',
+  createdAt: 'createdAt'
+} as const
+
+export type TopicFollowScalarFieldEnum = (typeof TopicFollowScalarFieldEnum)[keyof typeof TopicFollowScalarFieldEnum]
+
+
+export const DailyRankingScalarFieldEnum = {
+  launchDate: 'launchDate',
+  productId: 'productId',
+  finalRank: 'finalRank',
+  finalScore: 'finalScore',
+  finalVotes: 'finalVotes'
+} as const
+
+export type DailyRankingScalarFieldEnum = (typeof DailyRankingScalarFieldEnum)[keyof typeof DailyRankingScalarFieldEnum]
+
+
+export const RankSnapshotScalarFieldEnum = {
+  productId: 'productId',
+  capturedAt: 'capturedAt',
+  rank: 'rank',
+  score: 'score',
+  voteCount: 'voteCount'
+} as const
+
+export type RankSnapshotScalarFieldEnum = (typeof RankSnapshotScalarFieldEnum)[keyof typeof RankSnapshotScalarFieldEnum]
+
+
+export const FeaturedSlotScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  slotOrder: 'slotOrder',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type FeaturedSlotScalarFieldEnum = (typeof FeaturedSlotScalarFieldEnum)[keyof typeof FeaturedSlotScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  productId: 'productId',
+  commentId: 'commentId',
+  payload: 'payload',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const NotificationPreferenceScalarFieldEnum = {
+  userId: 'userId',
+  type: 'type',
+  emailEnabled: 'emailEnabled',
+  inappEnabled: 'inappEnabled'
+} as const
+
+export type NotificationPreferenceScalarFieldEnum = (typeof NotificationPreferenceScalarFieldEnum)[keyof typeof NotificationPreferenceScalarFieldEnum]
+
+
+export const EmailOutboxScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  toEmail: 'toEmail',
+  type: 'type',
+  subject: 'subject',
+  bodyHtml: 'bodyHtml',
+  status: 'status',
+  attempts: 'attempts',
+  nextAttemptAt: 'nextAttemptAt',
+  lastError: 'lastError',
+  dedupeKey: 'dedupeKey',
+  createdAt: 'createdAt',
+  sentAt: 'sentAt'
+} as const
+
+export type EmailOutboxScalarFieldEnum = (typeof EmailOutboxScalarFieldEnum)[keyof typeof EmailOutboxScalarFieldEnum]
+
+
+export const ProductViewEventScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  viewerId: 'viewerId',
+  referrer: 'referrer',
+  visitorHash: 'visitorHash',
+  viewedAt: 'viewedAt'
+} as const
+
+export type ProductViewEventScalarFieldEnum = (typeof ProductViewEventScalarFieldEnum)[keyof typeof ProductViewEventScalarFieldEnum]
+
+
+export const ProductDailyStatScalarFieldEnum = {
+  productId: 'productId',
+  statDate: 'statDate',
+  views: 'views',
+  uniqueVisitors: 'uniqueVisitors',
+  votes: 'votes',
+  comments: 'comments'
+} as const
+
+export type ProductDailyStatScalarFieldEnum = (typeof ProductDailyStatScalarFieldEnum)[keyof typeof ProductDailyStatScalarFieldEnum]
+
+
+export const ExportJobScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  requestedById: 'requestedById',
+  status: 'status',
+  fileUrl: 'fileUrl',
+  error: 'error',
+  createdAt: 'createdAt',
+  finishedAt: 'finishedAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type ExportJobScalarFieldEnum = (typeof ExportJobScalarFieldEnum)[keyof typeof ExportJobScalarFieldEnum]
+
+
 export const StaffAuditLogScalarFieldEnum = {
   id: 'id',
   actorId: 'actorId',
@@ -156,12 +425,33 @@ export const StaffAuditLogScalarFieldEnum = {
 export type StaffAuditLogScalarFieldEnum = (typeof StaffAuditLogScalarFieldEnum)[keyof typeof StaffAuditLogScalarFieldEnum]
 
 
+export const VoteFlagScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  userId: 'userId',
+  reason: 'reason',
+  details: 'details',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type VoteFlagScalarFieldEnum = (typeof VoteFlagScalarFieldEnum)[keyof typeof VoteFlagScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const NullableJsonNullValueInput = {

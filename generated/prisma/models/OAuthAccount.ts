@@ -205,6 +205,8 @@ export type OAuthAccountOrderByWithRelationInput = {
 
 export type OAuthAccountWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  provider_providerUserId?: Prisma.OAuthAccountProviderProviderUserIdCompoundUniqueInput
+  userId_provider?: Prisma.OAuthAccountUserIdProviderCompoundUniqueInput
   AND?: Prisma.OAuthAccountWhereInput | Prisma.OAuthAccountWhereInput[]
   OR?: Prisma.OAuthAccountWhereInput[]
   NOT?: Prisma.OAuthAccountWhereInput | Prisma.OAuthAccountWhereInput[]
@@ -214,7 +216,7 @@ export type OAuthAccountWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringFilter<"OAuthAccount"> | string
   createdAt?: Prisma.DateTimeFilter<"OAuthAccount"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id">
+}, "id" | "provider_providerUserId" | "userId_provider">
 
 export type OAuthAccountOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -310,6 +312,16 @@ export type OAuthAccountListRelationFilter = {
 
 export type OAuthAccountOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type OAuthAccountProviderProviderUserIdCompoundUniqueInput = {
+  provider: $Enums.AuthProvider
+  providerUserId: string
+}
+
+export type OAuthAccountUserIdProviderCompoundUniqueInput = {
+  userId: string
+  provider: $Enums.AuthProvider
 }
 
 export type OAuthAccountCountOrderByAggregateInput = {

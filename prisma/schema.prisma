@@ -10,8 +10,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-   extensions = [citext, pg_trgm]
+  provider   = "postgresql"
+  extensions = [citext, pg_trgm]
 }
 
 enum UserRole {
@@ -52,10 +52,109 @@ enum StaffActions {
   reject_product
   request_product_changes
   takedown_product
+  restore_product
   feature_product
+  unfeature_product
+  hide_comment
+  restore_comment
   resolve_report
+  dismiss_report
 
   @@map("staff_action")
+}
+
+enum ProductStatus {
+  draft
+  in_review
+  changes_requested
+  rejected
+  approved
+  scheduled
+  live
+  taken_down
+
+  @@map("product_status")
+}
+
+enum ReviewDecision {
+  approved
+  rejected
+  changes_requested
+
+  @@map("review_decision")
+}
+
+enum MediaKind {
+  logo
+  screenshot
+
+  @@map("media_kind")
+}
+
+enum CommentStatus {
+  visible
+  hidden
+  deleted
+
+  @@map("comment_status")
+}
+
+enum ReportStatus {
+  open
+  dismissed
+  actioned
+
+  @@map("report_status")
+}
+
+// Types the member can switch off (used by notifications + preferences)
+enum NotificationType {
+  product_approved
+  product_rejected
+  product_changes_requested
+  launch_reminder
+  product_live
+  comment_on_product
+  reply_to_comment
+  daily_top5
+  weekly_best
+
+  @@map("notification_type")
+}
+
+// Every email kind. verify_email / reset_password can never be switched off.
+enum EmailType {
+  verify_email
+  reset_password
+  product_approved
+  product_rejected
+  product_changes_requested
+  launch_reminder
+  product_live
+  comment_on_product
+  daily_top5
+  weekly_best
+
+  @@map("email_type")
+}
+
+enum EmailStatus {
+  pending
+  sending
+  sent
+  failed
+  skipped
+
+  @@map("email_status")
+}
+
+enum JobStatus {
+  queued
+  running
+  ready
+  failed
+
+  @@map("job_status")
 }
 
 model User {
@@ -69,8 +168,8 @@ model User {
   failedAttempts    Int       @default(0) @map("failed_attempts")
   lockedUntil       DateTime? @map("locked_until") @db.Timestamptz()
 
-  headline    String @unique @db.Citext
-  username    String? @db.VarChar(50) 
+  headline    String
+  username    String? @db.VarChar(50)
   displayName String? @map("display_name")
   avatarURL   String? @map("avatar_url")
 
@@ -87,13 +186,36 @@ model User {
 
   // 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  updatedAt DateTime  @map("updated_at") @db.Timestamptz(6)
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
 
+  // auth
   sessions       Session[]
   authTokens     AuthToken[]
   oauthAccounts  OAuthAccount[]
   staffAuditLogs StaffAuditLog[]
+
+  // products
+  products       Product[]       @relation("ProductFounder")
+  productReviews ProductReview[] @relation("ReviewerReviews")
+  featuredSlots  FeaturedSlot[]
+  votes          Vote[]
+  comments       Comment[]
+  reportsFiled      Report[]      @relation("ReportReporter")
+  reportsHandled    Report[]      @relation("ReportHandler")
+  following         UserFollow[]  @relation("Follower")
+  followers         UserFollow[]  @relation("Followed")
+  topicFollows      TopicFollow[]
+  voteFlags         VoteFlag[]        @relation("FlaggedUser")
+  voteFlagsReviewed VoteFlag[]        @relation("FlagReviewer")
+  productViews      ProductViewEvent[]
+
+  // notifications
+  notifications           Notification[]
+  notificationPreferences NotificationPreference[]
+  emails                  EmailOutbox[]
+  exportJobs              ExportJob[]
+
 
   @@index([status])
   @@index([role])
@@ -110,23 +232,24 @@ model OAuthAccount {
   createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([provider, providerUserId])
+  @@unique([provider, providerUserId])
+  @@unique([userId, provider])
   @@index([userId])
   @@map("oauth_account")
 }
 
 model Session {
-  id               String   @id @default(uuid()) @db.Uuid
-  userId           String   @map("user_id") @db.Uuid
-  refreshTokenHash String   @unique @map("refresh_token_hash")
-  userAgent        String   @map("user_agent")
-  ip               String?  @map("signup_ip") @db.Inet
-  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  lastUsedAt       DateTime @default(now()) @map("last_used_at") @db.Timestamptz(6)
-  expiresAt        DateTime @default(now()) @map("expires_at") @db.Timestamptz(6)
+  id               String    @id @default(uuid()) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  refreshTokenHash String    @unique @map("refresh_token_hash")
+  userAgent        String?   @map("user_agent")
+  ip               String?   @map("ip") @db.Inet
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  lastUsedAt       DateTime  @default(now()) @map("last_used_at") @db.Timestamptz(6)
+  expiresAt        DateTime  @map("expires_at") @db.Timestamptz(6)
   revokedAt        DateTime? @map("revoked_at") @db.Timestamptz(6)
 
-  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])
@@ -141,12 +264,383 @@ model AuthToken {
   expiresAt DateTime     @map("expires_at") @db.Timestamptz(6)
   usedAt    DateTime?    @map("used_at") @db.Timestamptz(6)
   createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
-  user      User?        @relation(fields: [userId], references: [id])
+  user      User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, purpose])
   @@index([expiresAt])
   @@map("auth_tokens")
 }
+
+// model StaffAuditLog {
+//   id         String       @id @default(uuid()) @db.Uuid
+//   actorId    String       @map("actor_id") @db.Uuid
+//   action     StaffActions
+//   targetType String       @map("target_type") // 'user' | 'product' | 'comment' | 'report'
+//   targetId   String       @map("target_id") @db.Uuid
+//   reason     String?
+//   metadata   Json?        @db.JsonB
+//   ipAddress  String?      @map("ip_address") @db.Inet
+//   createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamptz
+
+//   actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+
+//   @@index([actorId, createdAt(sort: Desc)])
+//   @@index([targetType, targetId, createdAt(sort: Desc)])
+//   @@map("staff_audit_log")
+// }
+
+// -----------------product Section---------------
+model Topic {
+  id   String @id @default(uuid()) @db.Uuid
+  slug String @unique @db.Citext
+  name String @unique
+
+  products  ProductTopic[]
+  followers TopicFollow[]
+
+  @@map("topics")
+}
+
+model Product {
+  id          String        @id @default(uuid()) @db.Uuid
+  founderId   String        @map("founder_id") @db.Uuid
+  name        String
+  slug        String        @unique @db.Citext
+  pitch       String        @db.VarChar()
+  description String
+  websiteUrl  String        @map("website_url")
+  status      ProductStatus @default(draft)
+
+  launchDate  DateTime? @map("launch_date") @db.Date
+  launchedAt  DateTime? @map("launched_at") @db.Timestamptz(6)
+  submittedAt DateTime? @map("submitted_at") @db.Timestamptz(6)
+
+  isFeatured Boolean @default(false) @map("is_featured")
+  voteCount  Int     @default(0) @map("vote_count")
+  score      Float   @default(0)
+
+  searchTsv Unsupported("tsvector")? @map("search_tsv")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @map("updated_at") @db.Timestamptz(6)
+
+  founder User           @relation("ProductFounder", fields: [founderId], references: [id])
+  topics  ProductTopic[]
+  media   ProductMedia[]
+
+  reviews ProductReview[]
+  votes         Vote[]
+  comments      Comment[]
+  reports       Report[]
+  dailyRankings DailyRanking[]
+  rankSnapshots RankSnapshot[]
+  featuredSlots FeaturedSlot[]
+  notifications Notification[]
+  viewEvents    ProductViewEvent[]
+  dailyStats    ProductDailyStat[]
+  exportJobs    ExportJob[]
+  voteFlags     VoteFlag[]
+
+  @@index([founderId])
+  @@index([status, launchDate, score(sort: Desc)])
+  @@index([status, submittedAt])
+  @@map("products")
+}
+
+model ProductMedia {
+  id        String    @id @default(uuid()) @db.Uuid
+  productId String    @map("product_id") @db.Uuid
+  kind      MediaKind
+  fileUrl   String    @map("file_url")
+  position  Int       @default(0)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_media")
+}
+
+model ProductTopic {
+  productId String @map("product_id") @db.Uuid
+  topicId   String @map("topic_id") @db.Uuid
+
+  topic   Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, topicId])
+  @@index([topicId])
+  @@map("product_topics")
+}
+
+model ProductReview {
+  id         String         @id @default(uuid()) @db.Uuid
+  productId  String         @map("product_id") @db.Uuid
+  reviewerId String         @map("reviewer_id") @db.Uuid
+  decision   ReviewDecision
+  note       String?
+  createdAt  DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  reviewr User    @relation("ReviewerReviews", fields: [reviewerId], references: [id])
+
+  @@index([productId, createdAt])
+  @@map("product_reviews")
+}
+
+model AppSetting {
+  key      String   @id
+  value    String
+  updateAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("app_settings")
+}
+
+// engagement
+
+model Vote {
+  userId     String   @map("user_id") @db.Uuid
+  productId  String   @map("product_id") @db.Uuid
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  ip         String?  @db.Inet
+  deviceHash String?  @map("device_hash")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+  @@index([productId, createdAt])
+  @@index([ip, createdAt])
+  @@map("votes")
+}
+
+model Comment{
+  id String @id @default(uuid()) @db.Uuid
+  productId       String        @map("product_id") @db.Uuid
+  userId          String        @map("user_id") @db.Uuid
+  parentCommentId String?       @map("parent_comment_id") @db.Uuid
+  body String
+  status CommentStatus @default(visible)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  editedAt DateTime? @map("edited_at") @db.Timestamptz(6)
+
+  product Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User      @relation(fields: [userId], references: [id])
+  parent  Comment?  @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  replies Comment[] @relation("CommentReplies")
+
+  reports       Report[]
+  notifications Notification[] 
+
+  @@index([productId,createdAt])
+  @@index([parentCommentId])
+  @@map("comments")
+}
+
+model Report{
+  id              String       @id @default(uuid()) @db.Uuid
+  reporterId String @map("reporter_id") @db.Uuid
+  targetProductId String? @map("target_product_id") @db.Uuid
+  targetCommentId String? @map("target_comment_id") @db.Uuid
+  reason String
+  status ReportStatus @default(open)
+  handledById String? @map("handled_by") @db.Uuid
+  handledAt DateTime? @map("handled_at") @db.Timestamptz(6)
+  resolutionNote String? @map("resolution_note")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  reporter User @relation("ReportReporter" ,fields: [reporterId] ,references: [id] )
+  handledBy User? @relation("ReportHandler" ,fields: [handledById] ,references: [id] )
+  targetProduct Product? @relation(fields: [targetProductId] ,references: [id] ,onDelete: Cascade)
+  targetComment Comment? @relation(fields: [targetCommentId] ,references: [id] ,onDelete: Cascade)
+
+  @@index([status,createdAt])
+  @@map("reports")
+}
+
+model UserFollow {
+  followerId String   @map("follower_id") @db.Uuid
+  followedId String   @map("followed_id") @db.Uuid
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  follower User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followed User @relation("Followed", fields: [followedId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followedId])
+  @@index([followedId])
+  @@map("user_follows")
+}
+
+model TopicFollow {
+  userId    String   @map("user_id") @db.Uuid
+  topicId   String   @map("topic_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([userId, topicId])
+  @@index([topicId])
+  @@map("topic_follows")
+}
+
+model DailyRanking {
+  launchDate DateTime @map("launch_date") @db.Date
+  productId  String   @map("product_id") @db.Uuid
+  finalRank  Int      @map("final_rank")
+  finalScore Float    @map("final_score")
+  finalVotes Int      @map("final_votes")
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@id([launchDate, productId])
+  @@unique([launchDate, finalRank])
+  @@map("daily_rankings")
+}
+
+// Hourly while live; powers "where it ranked" on the dashboard
+model RankSnapshot {
+  productId  String   @map("product_id") @db.Uuid
+  capturedAt DateTime @map("captured_at") @db.Timestamptz(6)
+  rank       Int
+  score      Float
+  voteCount  Int      @map("vote_count")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, capturedAt])
+  @@map("rank_snapshots")
+}
+
+model FeaturedSlot {
+  id          String   @id @default(uuid()) @db.Uuid
+  productId   String   @map("product_id") @db.Uuid
+  slotOrder   Int      @default(0) @map("slot_order")
+  startsAt    DateTime @map("starts_at") @db.Timestamptz(6)
+  endsAt      DateTime @map("ends_at") @db.Timestamptz(6)
+  createdById String   @map("created_by") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdBy User    @relation(fields: [createdById], references: [id])
+
+  @@index([startsAt, endsAt])
+  @@map("featured_slots")
+}
+
+// =====================================================================
+// 5. NOTIFICATIONS
+// =====================================================================
+
+// In-app bell
+model Notification {
+  id        String           @id @default(uuid()) @db.Uuid
+  userId    String           @map("user_id") @db.Uuid
+  type      NotificationType
+  productId String?          @map("product_id") @db.Uuid
+  commentId String?          @map("comment_id") @db.Uuid
+  payload   Json             @default("{}") @db.JsonB
+  readAt    DateTime?        @map("read_at") @db.Timestamptz(6)
+  createdAt DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt, createdAt(sort: Desc)])
+  @@map("notifications")
+}
+
+// Missing row = default (on). Check BEFORE queuing any optional email.
+model NotificationPreference {
+  userId       String           @map("user_id") @db.Uuid
+  type         NotificationType
+  emailEnabled Boolean          @default(true) @map("email_enabled")
+  inappEnabled Boolean          @default(true) @map("inapp_enabled")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, type])
+  @@map("notification_preferences")
+}
+
+// Every email is a row first; a worker sends it and retries on failure
+model EmailOutbox {
+  id            String      @id @default(uuid()) @db.Uuid
+  userId        String?     @map("user_id") @db.Uuid
+  toEmail       String      @map("to_email") @db.Citext
+  type          EmailType
+  subject       String
+  bodyHtml      String      @map("body_html")
+  status        EmailStatus @default(pending)
+  attempts      Int         @default(0)
+  nextAttemptAt DateTime    @default(now()) @map("next_attempt_at") @db.Timestamptz(6)
+  lastError     String?     @map("last_error")
+  dedupeKey     String?     @unique @map("dedupe_key") // stops double-sending
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  sentAt        DateTime?   @map("sent_at") @db.Timestamptz(6)
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status, nextAttemptAt])
+  @@map("email_outbox")
+}
+
+// =====================================================================
+// 6. FOUNDER DASHBOARD & EXPORTS
+// =====================================================================
+
+model ProductViewEvent {
+  id          BigInt   @id @default(autoincrement())
+  productId   String   @map("product_id") @db.Uuid
+  viewerId    String?  @map("viewer_id") @db.Uuid
+  referrer    String?
+  visitorHash String?  @map("visitor_hash")
+  viewedAt    DateTime @default(now()) @map("viewed_at") @db.Timestamptz(6)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  viewer  User?   @relation(fields: [viewerId], references: [id], onDelete: SetNull)
+
+  @@index([productId, viewedAt])
+  @@map("product_view_events")
+}
+
+model ProductDailyStat {
+  productId      String   @map("product_id") @db.Uuid
+  statDate       DateTime @map("stat_date") @db.Date
+  views          Int      @default(0)
+  uniqueVisitors Int      @default(0) @map("unique_visitors")
+  votes          Int      @default(0)
+  comments       Int      @default(0)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, statDate])
+  @@map("product_daily_stats")
+}
+
+model ExportJob {
+  id            String    @id @default(uuid()) @db.Uuid
+  productId     String    @map("product_id") @db.Uuid
+  requestedById String    @map("requested_by") @db.Uuid
+  status        JobStatus @default(queued)
+  fileUrl       String?   @map("file_url")
+  error         String?
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  finishedAt    DateTime? @map("finished_at") @db.Timestamptz(6)
+  expiresAt     DateTime? @map("expires_at") @db.Timestamptz(6)
+
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  requestedBy User    @relation(fields: [requestedById], references: [id])
+
+  @@index([requestedById, createdAt(sort: Desc)])
+  @@index([status])
+  @@map("export_jobs")
+}
+
+// =====================================================================
+// 7. STAFF TOOLS & ANTI-CHEAT
+// =====================================================================
 
 model StaffAuditLog {
   id         String       @id @default(uuid()) @db.Uuid
@@ -155,13 +649,35 @@ model StaffAuditLog {
   targetType String       @map("target_type") // 'user' | 'product' | 'comment' | 'report'
   targetId   String       @map("target_id") @db.Uuid
   reason     String?
-  metadata   Json?        @db.JsonB
+  metadata   Json?        @db.JsonB // put before/after values here
   ipAddress  String?      @map("ip_address") @db.Inet
-  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  actor User @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  // Restrict, not Cascade - deleting a user must never erase the audit trail
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
 
   @@index([actorId, createdAt(sort: Desc)])
   @@index([targetType, targetId, createdAt(sort: Desc)])
   @@map("staff_audit_log")
 }
+
+// Suspicious voting found by a background job; staff review them
+model VoteFlag {
+  id           String    @id @default(uuid()) @db.Uuid
+  productId    String?   @map("product_id") @db.Uuid
+  userId       String?   @map("user_id") @db.Uuid
+  reason       String // same_ip_cluster | burst | new_account ...
+  details      Json      @default("{}") @db.JsonB
+  reviewedById String?   @map("reviewed_by") @db.Uuid
+  reviewedAt   DateTime? @map("reviewed_at") @db.Timestamptz(6)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  product    Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user       User?    @relation("FlaggedUser", fields: [userId], references: [id], onDelete: Cascade)
+  reviewedBy User?    @relation("FlagReviewer", fields: [reviewedById], references: [id])
+
+  @@index([reviewedAt, createdAt])
+  @@map("vote_flags")
+}
+
+

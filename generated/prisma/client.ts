@@ -62,7 +62,112 @@ export type Session = Prisma.SessionModel
  */
 export type AuthToken = Prisma.AuthTokenModel
 /**
+ * Model Topic
+ * 
+ */
+export type Topic = Prisma.TopicModel
+/**
+ * Model Product
+ * 
+ */
+export type Product = Prisma.ProductModel
+/**
+ * Model ProductMedia
+ * 
+ */
+export type ProductMedia = Prisma.ProductMediaModel
+/**
+ * Model ProductTopic
+ * 
+ */
+export type ProductTopic = Prisma.ProductTopicModel
+/**
+ * Model ProductReview
+ * 
+ */
+export type ProductReview = Prisma.ProductReviewModel
+/**
+ * Model AppSetting
+ * 
+ */
+export type AppSetting = Prisma.AppSettingModel
+/**
+ * Model Vote
+ * 
+ */
+export type Vote = Prisma.VoteModel
+/**
+ * Model Comment
+ * 
+ */
+export type Comment = Prisma.CommentModel
+/**
+ * Model Report
+ * 
+ */
+export type Report = Prisma.ReportModel
+/**
+ * Model UserFollow
+ * 
+ */
+export type UserFollow = Prisma.UserFollowModel
+/**
+ * Model TopicFollow
+ * 
+ */
+export type TopicFollow = Prisma.TopicFollowModel
+/**
+ * Model DailyRanking
+ * 
+ */
+export type DailyRanking = Prisma.DailyRankingModel
+/**
+ * Model RankSnapshot
+ * 
+ */
+export type RankSnapshot = Prisma.RankSnapshotModel
+/**
+ * Model FeaturedSlot
+ * 
+ */
+export type FeaturedSlot = Prisma.FeaturedSlotModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model NotificationPreference
+ * 
+ */
+export type NotificationPreference = Prisma.NotificationPreferenceModel
+/**
+ * Model EmailOutbox
+ * 
+ */
+export type EmailOutbox = Prisma.EmailOutboxModel
+/**
+ * Model ProductViewEvent
+ * 
+ */
+export type ProductViewEvent = Prisma.ProductViewEventModel
+/**
+ * Model ProductDailyStat
+ * 
+ */
+export type ProductDailyStat = Prisma.ProductDailyStatModel
+/**
+ * Model ExportJob
+ * 
+ */
+export type ExportJob = Prisma.ExportJobModel
+/**
  * Model StaffAuditLog
  * 
  */
 export type StaffAuditLog = Prisma.StaffAuditLogModel
+/**
+ * Model VoteFlag
+ * 
+ */
+export type VoteFlag = Prisma.VoteFlagModel

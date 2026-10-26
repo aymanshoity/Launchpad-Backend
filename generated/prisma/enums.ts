@@ -51,8 +51,114 @@ export const StaffActions = {
   reject_product: 'reject_product',
   request_product_changes: 'request_product_changes',
   takedown_product: 'takedown_product',
+  restore_product: 'restore_product',
   feature_product: 'feature_product',
-  resolve_report: 'resolve_report'
+  unfeature_product: 'unfeature_product',
+  hide_comment: 'hide_comment',
+  restore_comment: 'restore_comment',
+  resolve_report: 'resolve_report',
+  dismiss_report: 'dismiss_report'
 } as const
 
 export type StaffActions = (typeof StaffActions)[keyof typeof StaffActions]
+
+
+export const ProductStatus = {
+  draft: 'draft',
+  in_review: 'in_review',
+  changes_requested: 'changes_requested',
+  rejected: 'rejected',
+  approved: 'approved',
+  scheduled: 'scheduled',
+  live: 'live',
+  taken_down: 'taken_down'
+} as const
+
+export type ProductStatus = (typeof ProductStatus)[keyof typeof ProductStatus]
+
+
+export const ReviewDecision = {
+  approved: 'approved',
+  rejected: 'rejected',
+  changes_requested: 'changes_requested'
+} as const
+
+export type ReviewDecision = (typeof ReviewDecision)[keyof typeof ReviewDecision]
+
+
+export const MediaKind = {
+  logo: 'logo',
+  screenshot: 'screenshot'
+} as const
+
+export type MediaKind = (typeof MediaKind)[keyof typeof MediaKind]
+
+
+export const CommentStatus = {
+  visible: 'visible',
+  hidden: 'hidden',
+  deleted: 'deleted'
+} as const
+
+export type CommentStatus = (typeof CommentStatus)[keyof typeof CommentStatus]
+
+
+export const ReportStatus = {
+  open: 'open',
+  dismissed: 'dismissed',
+  actioned: 'actioned'
+} as const
+
+export type ReportStatus = (typeof ReportStatus)[keyof typeof ReportStatus]
+
+
+export const NotificationType = {
+  product_approved: 'product_approved',
+  product_rejected: 'product_rejected',
+  product_changes_requested: 'product_changes_requested',
+  launch_reminder: 'launch_reminder',
+  product_live: 'product_live',
+  comment_on_product: 'comment_on_product',
+  reply_to_comment: 'reply_to_comment',
+  daily_top5: 'daily_top5',
+  weekly_best: 'weekly_best'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const EmailType = {
+  verify_email: 'verify_email',
+  reset_password: 'reset_password',
+  product_approved: 'product_approved',
+  product_rejected: 'product_rejected',
+  product_changes_requested: 'product_changes_requested',
+  launch_reminder: 'launch_reminder',
+  product_live: 'product_live',
+  comment_on_product: 'comment_on_product',
+  daily_top5: 'daily_top5',
+  weekly_best: 'weekly_best'
+} as const
+
+export type EmailType = (typeof EmailType)[keyof typeof EmailType]
+
+
+export const EmailStatus = {
+  pending: 'pending',
+  sending: 'sending',
+  sent: 'sent',
+  failed: 'failed',
+  skipped: 'skipped'
+} as const
+
+export type EmailStatus = (typeof EmailStatus)[keyof typeof EmailStatus]
+
+
+export const JobStatus = {
+  queued: 'queued',
+  running: 'running',
+  ready: 'ready',
+  failed: 'failed'
+} as const
+
+export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus]
