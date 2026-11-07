@@ -536,7 +536,7 @@ export type UserCreateInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -581,7 +581,7 @@ export type UserUncheckedCreateInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -716,7 +716,7 @@ export type UserCreateManyInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
 }
 
@@ -1216,7 +1216,7 @@ export type UserCreateWithoutOauthAccountsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -1260,7 +1260,7 @@ export type UserUncheckedCreateWithoutOauthAccountsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -1408,7 +1408,7 @@ export type UserCreateWithoutSessionsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
   oauthAccounts?: Prisma.OAuthAccountCreateNestedManyWithoutUserInput
@@ -1452,7 +1452,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
   oauthAccounts?: Prisma.OAuthAccountUncheckedCreateNestedManyWithoutUserInput
@@ -1600,7 +1600,7 @@ export type UserCreateWithoutAuthTokensInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   oauthAccounts?: Prisma.OAuthAccountCreateNestedManyWithoutUserInput
@@ -1644,7 +1644,7 @@ export type UserUncheckedCreateWithoutAuthTokensInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   oauthAccounts?: Prisma.OAuthAccountUncheckedCreateNestedManyWithoutUserInput
@@ -1792,7 +1792,7 @@ export type UserCreateWithoutProductsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -1836,7 +1836,7 @@ export type UserUncheckedCreateWithoutProductsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -1984,7 +1984,7 @@ export type UserCreateWithoutProductReviewsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -2028,7 +2028,7 @@ export type UserUncheckedCreateWithoutProductReviewsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -2176,7 +2176,7 @@ export type UserCreateWithoutVotesInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -2220,7 +2220,7 @@ export type UserUncheckedCreateWithoutVotesInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -2368,7 +2368,7 @@ export type UserCreateWithoutCommentsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -2412,7 +2412,7 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -2560,7 +2560,7 @@ export type UserCreateWithoutReportsFiledInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -2604,7 +2604,7 @@ export type UserUncheckedCreateWithoutReportsFiledInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -2653,7 +2653,7 @@ export type UserCreateWithoutReportsHandledInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -2697,7 +2697,7 @@ export type UserUncheckedCreateWithoutReportsHandledInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -2944,7 +2944,7 @@ export type UserCreateWithoutFollowingInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -2988,7 +2988,7 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -3037,7 +3037,7 @@ export type UserCreateWithoutFollowersInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -3081,7 +3081,7 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -3328,7 +3328,7 @@ export type UserCreateWithoutTopicFollowsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -3372,7 +3372,7 @@ export type UserUncheckedCreateWithoutTopicFollowsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -3520,7 +3520,7 @@ export type UserCreateWithoutFeaturedSlotsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -3564,7 +3564,7 @@ export type UserUncheckedCreateWithoutFeaturedSlotsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -3712,7 +3712,7 @@ export type UserCreateWithoutNotificationsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -3756,7 +3756,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -3904,7 +3904,7 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -3948,7 +3948,7 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -4096,7 +4096,7 @@ export type UserCreateWithoutEmailsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -4140,7 +4140,7 @@ export type UserUncheckedCreateWithoutEmailsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -4288,7 +4288,7 @@ export type UserCreateWithoutProductViewsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -4332,7 +4332,7 @@ export type UserUncheckedCreateWithoutProductViewsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -4480,7 +4480,7 @@ export type UserCreateWithoutExportJobsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -4524,7 +4524,7 @@ export type UserUncheckedCreateWithoutExportJobsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -4672,7 +4672,7 @@ export type UserCreateWithoutStaffAuditLogsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -4716,7 +4716,7 @@ export type UserUncheckedCreateWithoutStaffAuditLogsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -4864,7 +4864,7 @@ export type UserCreateWithoutVoteFlagsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -4908,7 +4908,7 @@ export type UserUncheckedCreateWithoutVoteFlagsInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
@@ -4957,7 +4957,7 @@ export type UserCreateWithoutVoteFlagsReviewedInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
@@ -5001,7 +5001,7 @@ export type UserUncheckedCreateWithoutVoteFlagsReviewedInput = {
   lastLoginIp?: string | null
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   authTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput

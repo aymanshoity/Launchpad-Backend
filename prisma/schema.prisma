@@ -186,7 +186,7 @@ model User {
 
   // 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime  @map("updated_at") @db.Timestamptz(6)
+  updatedAt DateTime  @map("updated_at") @updatedAt
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
 
   // auth
@@ -322,8 +322,7 @@ model Product {
   searchTsv Unsupported("tsvector")? @map("search_tsv")
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime @map("updated_at") @db.Timestamptz(6)
-
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
   founder User           @relation("ProductFounder", fields: [founderId], references: [id])
   topics  ProductTopic[]
   media   ProductMedia[]

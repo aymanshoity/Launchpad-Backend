@@ -457,7 +457,7 @@ export type ProductCreateInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -491,7 +491,7 @@ export type ProductUncheckedCreateInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -590,7 +590,7 @@ export type ProductCreateManyInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type ProductUpdateManyMutationInput = {
@@ -994,7 +994,7 @@ export type ProductCreateWithoutFounderInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewCreateNestedManyWithoutProductInput
@@ -1026,7 +1026,7 @@ export type ProductUncheckedCreateWithoutFounderInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -1106,7 +1106,7 @@ export type ProductCreateWithoutMediaInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewCreateNestedManyWithoutProductInput
@@ -1139,7 +1139,7 @@ export type ProductUncheckedCreateWithoutMediaInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
   votes?: Prisma.VoteUncheckedCreateNestedManyWithoutProductInput
@@ -1250,7 +1250,7 @@ export type ProductCreateWithoutTopicsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewCreateNestedManyWithoutProductInput
@@ -1283,7 +1283,7 @@ export type ProductUncheckedCreateWithoutTopicsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
   votes?: Prisma.VoteUncheckedCreateNestedManyWithoutProductInput
@@ -1394,7 +1394,7 @@ export type ProductCreateWithoutReviewsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -1427,7 +1427,7 @@ export type ProductUncheckedCreateWithoutReviewsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   votes?: Prisma.VoteUncheckedCreateNestedManyWithoutProductInput
@@ -1538,7 +1538,7 @@ export type ProductCreateWithoutVotesInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -1571,7 +1571,7 @@ export type ProductUncheckedCreateWithoutVotesInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -1682,7 +1682,7 @@ export type ProductCreateWithoutCommentsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -1715,7 +1715,7 @@ export type ProductUncheckedCreateWithoutCommentsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -1826,7 +1826,7 @@ export type ProductCreateWithoutReportsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -1859,7 +1859,7 @@ export type ProductUncheckedCreateWithoutReportsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -1970,7 +1970,7 @@ export type ProductCreateWithoutDailyRankingsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -2003,7 +2003,7 @@ export type ProductUncheckedCreateWithoutDailyRankingsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -2114,7 +2114,7 @@ export type ProductCreateWithoutRankSnapshotsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -2147,7 +2147,7 @@ export type ProductUncheckedCreateWithoutRankSnapshotsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -2258,7 +2258,7 @@ export type ProductCreateWithoutFeaturedSlotsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -2291,7 +2291,7 @@ export type ProductUncheckedCreateWithoutFeaturedSlotsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -2402,7 +2402,7 @@ export type ProductCreateWithoutNotificationsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -2435,7 +2435,7 @@ export type ProductUncheckedCreateWithoutNotificationsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -2546,7 +2546,7 @@ export type ProductCreateWithoutViewEventsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -2579,7 +2579,7 @@ export type ProductUncheckedCreateWithoutViewEventsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -2690,7 +2690,7 @@ export type ProductCreateWithoutDailyStatsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -2723,7 +2723,7 @@ export type ProductUncheckedCreateWithoutDailyStatsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -2834,7 +2834,7 @@ export type ProductCreateWithoutExportJobsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -2867,7 +2867,7 @@ export type ProductUncheckedCreateWithoutExportJobsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -2978,7 +2978,7 @@ export type ProductCreateWithoutVoteFlagsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   founder: Prisma.UserCreateNestedOneWithoutProductsInput
   topics?: Prisma.ProductTopicCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
@@ -3011,7 +3011,7 @@ export type ProductUncheckedCreateWithoutVoteFlagsInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   topics?: Prisma.ProductTopicUncheckedCreateNestedManyWithoutProductInput
   media?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutProductInput
@@ -3122,7 +3122,7 @@ export type ProductCreateManyFounderInput = {
   voteCount?: number
   score?: number
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type ProductUpdateWithoutFounderInput = {

@@ -25,7 +25,7 @@ export const toPublicUser = (user: User) => {
       username: user?.username,
       displayName: user?.displayName,
       role: user?.role,
-      avatarURL:user?.avatarURL,
+      avatarURL: user?.avatarURL,
       emailVerified: user?.emailVerifiedAt
    }
 
@@ -53,7 +53,8 @@ export const signup = async (input: { username: string, email: string, password:
          displayName: input.username,
          username: input.username,
          headline: "",
-         signupIp: client.ip
+         signupIp: client.ip,
+         updatedAt: new Date(),
       }
    })
    const token = generateRandomToken()
@@ -175,6 +176,7 @@ export const loginWithGoogle = async (idToken: string, client: ClientInfo) => {
             avatarURL: payload?.picture,
             emailVerifiedAt: new Date(),
             passwordHash: null,
+            updatedAt: new Date(),
             oauthAccounts: {
                create: { provider: "google", email: payload.email, providerUserId: payload.sub }
             }
@@ -306,38 +308,38 @@ export const changeUserPassword = async (userId: string, currentPassword: string
    })
 }
 
-export const updateUserProfile = async(
+export const updateUserProfile = async (
    userId: string,
    updates: { displayName?: string, headline?: string, username?: string },
    avatarBuffer?: Buffer
-)=>{
-   const data:Record<string,unknown>={...updates};
+) => {
+   const data: Record<string, unknown> = { ...updates };
 
-   if(avatarBuffer){
-      const result=await new Promise<{secure_url:string}>((resolve,reject)=>{
-         const stream=cloudinary.uploader.upload_stream(
+   if (avatarBuffer) {
+      const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
+         const stream = cloudinary.uploader.upload_stream(
             {
-               folder:"launchpad/avatars",
-               public_id:userId,
-               overwrite:true,
-               transformation:[{width:256,height:256,crop:"fill",gravity:"face"}]
+               folder: "launchpad/avatars",
+               public_id: userId,
+               overwrite: true,
+               transformation: [{ width: 256, height: 256, crop: "fill", gravity: "face" }]
             },
-            (error,result)=>{
-               if(error|| !result) return reject(error)
-                  resolve(result as {secure_url:string})
+            (error, result) => {
+               if (error || !result) return reject(error)
+               resolve(result as { secure_url: string })
             }
          );
          stream.end(avatarBuffer)
 
       })
-      data.avatarURL=result.secure_url;
+      data.avatarURL = result.secure_url;
    }
 
-   if(Object.keys(data).length===0){
-      throw new AppError(400,"No changes provided")
+   if (Object.keys(data).length === 0) {
+      throw new AppError(400, "No changes provided")
    }
 
-   const user=await prisma.user.update({where:{id:userId},data})
+   const user = await prisma.user.update({ where: { id: userId }, data })
    return user;
 
 }
