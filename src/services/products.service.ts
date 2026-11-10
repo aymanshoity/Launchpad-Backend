@@ -1,7 +1,10 @@
 
+import { cloudinary } from "../lib/cloudinary";
 import { prisma } from "../lib/prisma"
 import { AppError } from "../utils/AppError"
-import { uploadImage } from "../utils/uploadImage";
+import { uploadImage,UploadedImage} from "../utils/uploadImage";
+
+
 
 const MAX_TOPICS = 3;
 const MAX_SCREENSHOTS = 8;
@@ -148,11 +151,11 @@ export const setLogo = async (productId: string, founderId: string, file: Buffer
 
    const result = await uploadImage(file,
       {
-         folder: `launchpad/products/${productId}/logo`,
+         folder: `launchpad/products/${productId}`,
          public_id: "logo",
          overWrite: true,
          invalidate: true,
-         transformation: [{ width: 512, height: 512, crop: "fit" }]
+         transformation: [{ width: 512, height: 512, crop: "limit" }]
       }
    )
 
@@ -172,39 +175,59 @@ export const setLogo = async (productId: string, founderId: string, file: Buffer
 
 }
 
+const deleteImage = (publicId: string) => cloudinary.uploader.destroy(publicId, { invalidate: true })
+
 export const addScreenshots = async (productId: string, founderId: string, files: Buffer[]) => {
    await getEditableOwnedProduct(productId, founderId);
 
-   const existing = await prisma.productMedia.findMany({
+   if (files.length === 0) throw new AppError(400, "No images uploaded")
+
+   const existingCount = await prisma.productMedia.count({
       where: { productId, kind: "screenshot" },
-      select: { position: true }
    });
 
-   if (existing.length + files.length > MAX_SCREENSHOTS) {
+   if (existingCount + files.length > MAX_SCREENSHOTS) {
       throw new AppError(400, `Maximum ${MAX_SCREENSHOTS} screenshots allowed`);
    }
 
-   const startPosition = existing.length ? Math.max(...existing.map((e) => e.position)) + 1 : 0;
+   // const startPosition = existingCount ? Math.max(...existing.map((e) => e.position)) + 1 : 0;
 
-   const uploaded = await Promise.all(
-      files.map((buffer) =>
-         uploadImage(buffer, {
+  const uploaded: UploadedImage[] = [];
+   try {
+      for (const buffer of files) {
+         uploaded.push(await uploadImage(buffer, {
             folder: `launchpad/products/${productId}/screenshots`,
             transformation: [{ width: 1200, crop: "limit" }]
-         })
-      )
-   );
+         }))
+      }
 
-   return prisma.$transaction(
-      uploaded.map((result, i) =>
-         prisma.productMedia.create({
+
+
+      return await prisma.$transaction(async (tx) => {
+         await tx.$queryRaw`SELECT id FROM products WHERE id=${productId}::uuid FOR UPDATE`
+         const existing = await tx.productMedia.findMany({
+            where: { productId, kind: "screenshot" },
+            select: { position: true }
+         })
+
+         if (existing.length + uploaded.length > MAX_SCREENSHOTS) {
+            throw new AppError(400, `Maximum ${MAX_SCREENSHOTS} screenshots allowed`);
+         }
+         const startPosition = existing.length ? Math.max(...existing.map((e) => e.position)) + 1 : 0;
+
+         return Promise.all(uploaded.map((u, index) => tx.productMedia.create({
             data: {
                productId,
                kind: "screenshot",
-               fileUrl: result.secure_url,
-               position: startPosition + i
+               fileUrl: u.secure_url,
+               position: startPosition + index
             }
-         })
-      )
-   );
-};
+         })))
+      }
+
+      );
+   } catch (error) {
+      await Promise.allSettled(uploaded.map((u) => deleteImage(u.public_id)));
+      throw error;
+   }
+}
