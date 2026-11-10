@@ -2,7 +2,7 @@
 import { cloudinary } from "../lib/cloudinary";
 import { prisma } from "../lib/prisma"
 import { AppError } from "../utils/AppError"
-import { uploadImage,UploadedImage} from "../utils/uploadImage";
+import { uploadImage, UploadedImage } from "../utils/uploadImage";
 
 
 
@@ -46,7 +46,6 @@ export const createDraft = async (founderId: string, input: { name: string }) =>
    return product;
 }
 export const updateDraft = async (productId: string, founderId: string, updates: DraftUpdate) => {
-
    const product = await prisma.product.findUnique({ where: { id: productId } })
    if (!product) throw new AppError(404, "Product not found")
    if (product.founderId !== founderId) throw new AppError(403, "Not your product")
@@ -114,7 +113,7 @@ export const getMyProducts = async (founderId: string) => {
    return prisma.product.findMany({
       where: { founderId },
       include: {
-         medial: true, topics: {
+         media: true, topics: {
             include: { topic: true }
          }
       },
@@ -192,7 +191,7 @@ export const addScreenshots = async (productId: string, founderId: string, files
 
    // const startPosition = existingCount ? Math.max(...existing.map((e) => e.position)) + 1 : 0;
 
-  const uploaded: UploadedImage[] = [];
+   const uploaded: UploadedImage[] = [];
    try {
       for (const buffer of files) {
          uploaded.push(await uploadImage(buffer, {

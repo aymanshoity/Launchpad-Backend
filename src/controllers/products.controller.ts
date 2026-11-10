@@ -52,6 +52,7 @@ export const uploadLogo: RequestHandler = async (req, res) => {
 }
 export const addScreenshots: RequestHandler = async (req, res) => {
    const { productId } = paramsSchema.parse(req.params)
+   
    const files=req.files as Express.Multer.File[] |undefined ??[]
    if(!files || files.length===0) throw new AppError(400, "No images uploaded")
    const screenshots = await productService.addScreenshots(productId, res.locals.userId, files.map((f) => f.buffer))
