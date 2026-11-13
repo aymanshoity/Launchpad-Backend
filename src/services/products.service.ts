@@ -115,7 +115,11 @@ export const getMyProducts = async (founderId: string) => {
       include: {
          media: true, topics: {
             include: { topic: true }
-         }
+         },
+         reviews: {
+            orderBy: { createdAt: "desc" },
+            select: { decision: true, note: true, createdAt: true }, // no reviewer identity
+         },
       },
       orderBy: {
          createdAt: 'desc'
@@ -126,7 +130,15 @@ export const getProductForFounder = async (productId: string, founderId: string)
 
    const product = await prisma.product.findUnique({
       where: { id: productId },
-      include: { media: true, topics: { include: { topic: true } } }
+      include: {
+         media: true,
+         topics: { include: { topic: true } },
+         reviews: {
+            orderBy: { createdAt: "desc" },
+            select: { decision: true, note: true, createdAt: true }, // no reviewer identity
+         },
+      },
+
    })
 
    if (!product) throw new AppError(404, "Product not found")
