@@ -12,6 +12,7 @@ app.use(cors({
    origin:env.FRONTEND_URL,
    credentials:true
 }))
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/health', async (_req, res) => {
    res.json({ message: "Success set up backend" }); 

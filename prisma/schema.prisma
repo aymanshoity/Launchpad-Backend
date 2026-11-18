@@ -45,6 +45,7 @@ enum TokenPurpose {
 }
 
 enum StaffActions {
+  create_topic
   suspend_user
   unsuspend_user
   change_role

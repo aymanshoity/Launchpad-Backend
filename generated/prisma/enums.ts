@@ -44,6 +44,7 @@ export type TokenPurpose = (typeof TokenPurpose)[keyof typeof TokenPurpose]
 
 
 export const StaffActions = {
+  create_topic: 'create_topic',
   suspend_user: 'suspend_user',
   unsuspend_user: 'unsuspend_user',
   change_role: 'change_role',

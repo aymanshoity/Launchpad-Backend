@@ -2,7 +2,7 @@ import { Router } from "express";
 import * as products from "../controllers/products.controller";
 import { requiredAuth } from "../middleware/requireAuth";
 import { upload  } from "../middleware/upload";
-
+import * as launch from "../controllers/launch.controller";
 const router = Router();
 
 router.post("/", requiredAuth,products.createDraft);
@@ -12,5 +12,5 @@ router.patch("/:productId/update", requiredAuth,products.updateDraft);
 router.post("/:productId/submit", requiredAuth,products.submitForReview);
 router.post("/:productId/screenshots", requiredAuth, upload.array("screenshot", 8), products.addScreenshots);
 router.post("/:productId/logo", requiredAuth,upload.single("logo"), products.uploadLogo);
-
+router.put("/:productId/schedule", requiredAuth, launch.scheduleLaunch);
 export default router;
